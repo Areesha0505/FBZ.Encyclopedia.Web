@@ -1,9 +1,21 @@
-﻿@{
-    ViewData["Title"] = "Comics";
-}
+﻿@model List<FBZ.Encyclopedia.Web.Models.ComicRecord>
 
 <h2>Fantasy B’zaar Comic Encyclopedia</h2>
 
-<p>Welcome to the FBZ comic database.</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+        </tr>
+    </thead>
 
-<p>Comic records will be displayed here.</p>
+    <tbody>
+        @foreach (var comic in Model)
+        {
+            <tr>
+                <td>@comic.Title</td>
+            </tr>
+        }
+    </tbody>
+
+</table>

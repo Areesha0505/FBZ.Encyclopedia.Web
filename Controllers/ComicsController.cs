@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using FBZ.Encyclopedia.Web.Models;
+using System.IO;
 
 namespace FBZ.Encyclopedia.Web.Controllers
 {
@@ -6,7 +8,23 @@ namespace FBZ.Encyclopedia.Web.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            var comics = new List<ComicRecord>();
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Data/titles.csv");
+
+            var lines = System.IO.File.ReadAllLines(path).Skip(1);
+
+            foreach (var line in lines)
+            {
+                var parts = line.Split(',');
+
+                comics.Add(new ComicRecord
+                {
+                    Title = parts[0]
+                });
+            }
+
+            return View(comics);
         }
     }
 }
