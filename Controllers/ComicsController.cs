@@ -20,7 +20,7 @@ namespace FBZ.Encyclopedia.Web.Controllers
 
                 comics.Add(new ComicRecord
                 {
-                    Title = parts[0]
+                    Title = parts[1]
                 });
             }
 
