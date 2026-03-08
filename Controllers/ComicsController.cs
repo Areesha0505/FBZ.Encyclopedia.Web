@@ -1,29 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using FBZ.Encyclopedia.Web.Models;
+﻿using FBZ.Encyclopedia.Web.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace FBZ.Encyclopedia.Web.Controllers
+public IActionResult Index()
 {
-    public class ComicsController : Controller
+    var comics = new List<ComicRecord>();
+
+    var titlesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Data/titles.csv");
+    var recordsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Data/records.csv");
+
+    var titleLines = System.IO.File.ReadAllLines(titlesPath).Skip(1).ToList();
+    var recordLines = System.IO.File.ReadAllLines(recordsPath).Skip(1).ToList();
+
+    for (int i = 0; i < titleLines.Count && i < recordLines.Count; i++)
     {
-        public IActionResult Index()
+        var titleParts = titleLines[i].Split(',');
+        var recordParts = recordLines[i].Split(',');
+
+        comics.Add(new ComicRecord
         {
-            var comics = new List<ComicRecord>();
-
-            var titlesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Data/titles.csv");
-
-            var lines = System.IO.File.ReadAllLines(titlesPath).Skip(1);
-
-            foreach (var line in lines)
-            {
-                var parts = line.Split(',');
-
-                comics.Add(new ComicRecord
-                {
-                    Title = parts[1]
-                });
-            }
-
-            return View(comics);
-        }
+            Title = titleParts[1],
+            Year = int.Parse(recordParts[2])
+        });
     }
+
+    return View(comics);
 }
