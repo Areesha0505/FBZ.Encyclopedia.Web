@@ -5,27 +5,45 @@ namespace FBZ.Encyclopedia.Web.Controllers
 {
     public class ComicsController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(string search, string sortOrder)
         {
             var comics = new List<ComicRecord>();
 
-            var titlesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Data/titles.csv");
-            var recordsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Data/records.csv");
+            var titlesPath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot/Data/titles.csv"
+            );
 
             var titleLines = System.IO.File.ReadAllLines(titlesPath).Skip(1).ToList();
-            var recordLines = System.IO.File.ReadAllLines(recordsPath).Skip(1).ToList();
 
-            for (int i = 0; i < titleLines.Count && i < recordLines.Count; i++)
+            foreach (var line in titleLines)
             {
-                var titleParts = titleLines[i].Split(',');
-                var recordParts = recordLines[i].Split(',');
+                var parts = line.Split(',');
+
+                if (parts.Length < 2)
+                    continue;
 
                 comics.Add(new ComicRecord
                 {
-                    Title = titleParts[1],
-                    Year = int.TryParse(recordParts[2], out int year) ? year : 0
+                    Title = parts[1],
+                    Character = "Unknown"
                 });
             }
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                comics = comics
+                    .Where(c => c.Title.Contains(search, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                comics = comics
+                    .Where(c => c.Title.Contains(search, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
 
             return View(comics);
         }
