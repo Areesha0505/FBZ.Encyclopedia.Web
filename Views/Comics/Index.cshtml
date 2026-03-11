@@ -3,6 +3,7 @@
 <h2>Fantasy B’zaar Comic Encyclopedia</h2>
 
 <form method="get">
+
     <input type="text" name="search" placeholder="Search title..." />
 
     <select name="sortOrder">
@@ -10,7 +11,15 @@
         <option value="desc">Sort Z-A</option>
     </select>
 
+    <select name="genre">
+        <option value="">All Genres</option>
+        <option value="Action">Action</option>
+        <option value="Adventure">Adventure</option>
+        <option value="Comedy">Comedy</option>
+    </select>
+
     <button type="submit">Apply</button>
+
 </form>
 
 <table class="table">
@@ -18,6 +27,7 @@
         <tr>
             <th>Title</th>
             <th>Character</th>
+            <th>Genre</th>
         </tr>
     </thead>
 
@@ -27,6 +37,7 @@
             <tr>
                 <td>@comic.Title</td>
                 <td>@comic.Character</td>
+                <td>@comic.Genre</td>
             </tr>
         }
     </tbody>

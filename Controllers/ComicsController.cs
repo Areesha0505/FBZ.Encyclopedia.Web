@@ -5,7 +5,7 @@ namespace FBZ.Encyclopedia.Web.Controllers
 {
     public class ComicsController : Controller
     {
-        public IActionResult Index(string search, string sortOrder)
+        public IActionResult Index(string search, string sortOrder, string genre)
         {
             var comics = new List<ComicRecord>();
 
@@ -14,19 +14,27 @@ namespace FBZ.Encyclopedia.Web.Controllers
                 "wwwroot/Data/titles.csv"
             );
 
+            var recordsPath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot/Data/records.csv"
+            );
+
             var titleLines = System.IO.File.ReadAllLines(titlesPath).Skip(1).ToList();
+            var recordLines = System.IO.File.ReadAllLines(recordsPath).Skip(1).ToList();
 
-            foreach (var line in titleLines)
+            for (int i = 0; i < titleLines.Count && i < recordLines.Count; i++)
             {
-                var parts = line.Split(',');
+                var titleParts = titleLines[i].Split(',');
+                var recordParts = recordLines[i].Split(',');
 
-                if (parts.Length < 2)
+                if (titleParts.Length < 2)
                     continue;
 
                 comics.Add(new ComicRecord
                 {
-                    Title = parts[1],
-                    Character = "Unknown"
+                    Title = titleParts[1],
+                    Character = "Unknown",
+                    Genre = recordParts.Length > 3 ? recordParts[3] : "Unknown"
                 });
             }
 
@@ -37,13 +45,21 @@ namespace FBZ.Encyclopedia.Web.Controllers
                     .ToList();
             }
 
-            if (!string.IsNullOrEmpty(search))
+            if (!string.IsNullOrEmpty(genre))
             {
                 comics = comics
-                    .Where(c => c.Title.Contains(search, StringComparison.OrdinalIgnoreCase))
+                    .Where(c => c.Genre == genre)
                     .ToList();
             }
 
+            if (sortOrder == "desc")
+            {
+                comics = comics.OrderByDescending(c => c.Title).ToList();
+            }
+            else
+            {
+                comics = comics.OrderBy(c => c.Title).ToList();
+            }
 
             return View(comics);
         }

@@ -3,6 +3,9 @@
     public class ComicRecord
     {
         public string Title { get; set; }
+
         public string Character { get; set; }
+
+        public string Genre { get; set; }
     }
 }
